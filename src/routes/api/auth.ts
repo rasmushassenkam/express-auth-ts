@@ -106,7 +106,6 @@ router.post("/login", async (req, res, next) => {
 });
 
 router.get("/me", async (req, res, next) => {
-  console.log("REQ.USER: ", req.user);
   return res.send(<IResponse<IProfile>>{
     response: req.user,
     status: EStatusCode.OK,

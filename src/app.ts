@@ -9,6 +9,8 @@ import { constants } from "./config/constants";
 import { AuthRoutes } from "./routes";
 import { createClient } from "redis";
 import { healthCheck as redisHealthCheck } from "./utils/redisHealthCheck";
+import { IResponse } from "./interfaces/responses/IResponse";
+import { EStatusCode } from "./enums";
 
 require("dotenv").config();
 
@@ -61,6 +63,20 @@ app.listen(process.env.PORT || constants.PORT, () => {
     useCreateIndex: true,
   });
   console.log("App listening on PORT: ", constants.PORT);
+});
+
+// Protected route for testing
+app.get("/protected", (req, res) => {
+  if (req.isAuthenticated()) {
+    return res.send(<IResponse<string>>{
+      status: EStatusCode.OK,
+      response: "OK",
+    });
+  }
+  return res.send(<IResponse<string>>{
+    status: EStatusCode.UNAUTHORIZED,
+    response: "UNAUTHORIZED",
+  });
 });
 
 const db = mongoose.connection;
